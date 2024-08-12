@@ -2,7 +2,8 @@ import Foundation
 
 var students: [Int:[Any]] = [:]
 var notes: [Int:[String : [String : Float]]] = [:]
-
+var transac: [Int:[[Int : Int]]] = [:]
+var forTransac: [Int : Int] = [:]
 
 var gestBoucle = true
 
@@ -17,13 +18,15 @@ while gestBoucle{
   case "1":
       gestionStudent()
   case "2":
-      print("C'est le week-end")
+      gestionEconomat()
   case "3":
     gestBoucle = false
   default:
-      print("Jour ordinaire")
+      print("MAUVAISE CHOIX")
   }
 }
+
+// ------ DEBUT GESTION ETUDIANTS ------
 
 //Fonction permettant d'enregistrement d'un étudiant
 func gestionStudent(){
@@ -130,42 +133,55 @@ func saveData(){
             switch choice{
                 case "1":
                     student.append("1ere ANNEE")
+                    student.append(10000)
                     break
                 case "2":
                     student.append("2eme ANNEE")
+                    student.append(10000)
                     break
                 case "3":
                     student.append("3eme ANNEE")
+                    student.append(10000)
                     break
                 case "4":
                     student.append("4eme ANNEE")
+                    student.append(10000)
                     break
                 case "5":
                     student.append("5eme ANNEE")
+                    student.append(10000)
                     break
                 case "6":
                     student.append("6eme ANNEE")
+                    student.append(10000)
                     break
                 case "7":
                     student.append("7eme ANNEE")
+                    student.append(20000)
                     break
                 case "8":
                     student.append("8eme ANNEE")
+                    student.append(20000)
                     break
                 case "9":
                     student.append("9eme ANNEE")
+                    student.append(20000)
                     break
                 case "10":
                     student.append("SECONDAIRE 1")
+                    student.append(20000)
                     break
                 case "11":
                     student.append("SECONDAIRE 2")
+                    student.append(20000)
                     break
                 case "12":
                     student.append("SECONDAIRE 3")
+                    student.append(20000)
                     break
                 case "13":
                     student.append("SECONDAIRE 4")
+                    student.append(20000)
                     break
                 default:
                     forMenu = false
@@ -207,6 +223,7 @@ func displayStudents(_ students: [Int:[Any]]){
         }
 
         print("Classe : \(value[3])")
+        print("M : \(value[4])")
         print("-----------------------")
 
         if notes.keys.contains(key){
@@ -222,6 +239,7 @@ func displayStudents(_ students: [Int:[Any]]){
     }
 }
 
+//Calcul de la moyenne d'un etudiant
 func moyenneDesNotes(){
     clearConsole()
     var notesStudent: [String: Float] = [:]
@@ -312,8 +330,7 @@ func moyenneDesNotes(){
                 }else{
                     print("Une erreur c'est produite")
                 }
-            }            
-            
+            }             
         }
     }else if(classe == "7eme ANNEE" || classe == "8eme ANNEE" || classe == "9eme ANNEE"){
         for i in 0..<matieres[1].count{
@@ -330,7 +347,6 @@ func moyenneDesNotes(){
                     print("Une erreur c'est produite")
                 }
             }            
-
         }
     }else{
         for i in 0..<matieres[2].count{
@@ -346,8 +362,7 @@ func moyenneDesNotes(){
                 }else{
                     print("Une erreur c'est produite")
                 }
-            }            
-
+            }
         }
     }
     //Calcul de la moyenne
@@ -368,6 +383,8 @@ func moyenneDesNotes(){
         notes[codeStud] = trim
     }
 }
+
+// ------ FIN GESTION ETUDIANTS ------
 
 func clearConsole() {
     print("\u{001B}[2J")
