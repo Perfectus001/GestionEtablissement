@@ -386,6 +386,180 @@ func moyenneDesNotes(){
 
 // ------ FIN GESTION ETUDIANTS ------
 
+// ------ DEBUT GESTION ECONOMAT ------
+
+func gestionEconomat(){
+    clearConsole()
+    var gestBoucle2 = true
+
+    while gestBoucle2{
+        print("MENU GESTION ETUDIANT")
+        print("1. AJOUT D'UNE TRANSACTION FINANCIERE")
+        print("2. LISTER TOUTES LES TRANSACTTIONS")
+        print("3. CALCULER LE SOLDE ACTUEL")
+        print("4. Sortir du menu")
+
+        let choice = readLine()
+
+        switch choice {
+            case "1":
+              clearConsole()
+                SaveTransac()
+            case "2":
+                clearConsole()
+                if(students.count == 0){
+                    print("Aucun eleve n'a ete enregistre")
+                }else{
+                    displayTransaction(transac)
+                }
+            case "3":
+                calculeSolde(transac, students)
+            case "4":
+                gestBoucle2 = false
+            default:
+                print("MAUVAIX CHOIX")
+        }
+    }
+
+}
+
+func SaveTransac(){
+    var temponTransac: [Int : Int] = [:]
+    var tempTab: [[Int : Int]] = []
+    var fraisTotal: Int = 0
+    var totTransac: Int = 0
+    var forLoop = true
+    while forLoop{
+        print("Veuillez saisir le code de l'étudiant: ")
+        if let nombre = readLine(), let code = Int(nombre){
+            if let studentsInfo =  students[code]{
+                print(studentsInfo)
+                var montantsAutorises: [Double] = []
+                if let montantTotal = studentsInfo[4] as? Int{
+                    fraisTotal = montantTotal
+                    montantsAutorises = [
+                        0.25 * Double(montantTotal),
+                        0.50 * Double(montantTotal),
+                        0.75 * Double(montantTotal),
+                        1.00 * Double(montantTotal)
+                    ]
+                }
+                
+                if var tabTransac = transac[code]{
+                    
+                    for element in tabTransac{
+                        for (_, value) in element{
+                            totTransac += value
+                        }
+                    }
+                    
+                    if tabTransac.count <= 4{
+                        if((studentsInfo[4] as! Int - totTransac) > 0){
+                            while true{
+                                print("Montant total : \(fraisTotal)")
+                                print("Veuillez saisir le Montant: ")
+                                if let montantString = readLine(), let montant = Int(montantString){
+                                    if montantsAutorises.contains(Double(montant)){
+                                        temponTransac[tabTransac.count + 1] =  montant
+                                        tabTransac.append(temponTransac)
+                                        transac[code] = tabTransac
+                                        forLoop = false
+                                        break
+                                    }else{
+                                        print("Il est possible de verser que 25%, 50%, 75% ou 100% du montant")
+                                    }
+                                }
+                            }
+                        }else{
+                            print("Le solde de l'etudiant est a 0")
+                        }
+                    }else{
+                        print("Le nombre de transaction est deja a 4")
+                    }
+                }else{
+                    while true{
+                        print("Montant total : \(fraisTotal)")
+                        print("Veuillez saisir le Montant: ")
+                        if let montantString = readLine(), let montant = Int(montantString){
+                            if montantsAutorises.contains(Double(montant)){
+                                temponTransac[1] =  montant
+                                tempTab.append(temponTransac)
+                                transac[code] = tempTab
+                                forLoop = false
+                                break
+                            }else{
+                                print("Il est possible de verser que 25%, 50%, 75% ou 100% du montant")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    print("Enregistrement effectue avec success")
+}
+
+func displayTransaction(_ transac: [Int:[[Int : Int]]]){
+    print("AFFICHAGE DES Transaction")
+    print(transac)
+    print("-----------------------")
+
+    for(key, _) in students{
+        for(keyT, valueT) in transac{
+            if key == keyT{
+                print("Transaction de l'etudiant \(key)")
+
+                for element in valueT{
+                    for(key2, value2) in element{
+                        print("Transaction #\(key2) : \(value2)")
+                    }
+                }
+            }
+        }
+    }
+}
+
+func calculeSolde(_ transac: [Int:[[Int : Int]]],_ students: [Int:[Any]]){
+    clearConsole()
+
+    var forLoop = true
+    while forLoop{
+        print("Veuillez saisir le code de l'étudiant: ")
+        if let nombre = readLine(), let code = Int(nombre){
+            if let studentsInfo =  students[code]{
+                print(studentsInfo)
+
+                if let montantTotal = studentsInfo[4] as? Int{
+                    var solde: Int = montantTotal
+                    var totTransac: Int = 0
+                    if(transac.keys.contains(code)){
+                        if let tabTransac = transac[code]{
+                            for element in tabTransac{
+                                for (_, value) in element{
+                                    totTransac += value
+                                }
+                                
+                            }
+                            solde = montantTotal - totTransac
+                            if solde <= 0{
+                                print("Le solde de l'etudiant est a 0")
+                            }else{
+                                print("Le solde de l'etudiant est de \(solde)")
+                            }
+                            forLoop = false
+                        }
+                    }else{
+                        print("Le solde de l'etudiant est a \(montantTotal)")
+                        forLoop = false
+                    }
+                }
+            }
+        }
+    }
+}
+//Fin de la gestion Economat
+
+
 func clearConsole() {
     print("\u{001B}[2J")
     print("\u{001B}[H")
